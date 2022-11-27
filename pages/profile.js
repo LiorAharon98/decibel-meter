@@ -20,8 +20,8 @@ const Profile = () => {
         <DecibelAnalyzer arr={user.decibelHistory} type="profile">
           <h1> hello {user.name}</h1>
           <input type={"text"} placeholder="test name" ref={testRef} />
-          {userTestNames.map((value) => {
-            return <div>{value}</div>;
+          {userTestNames.map((value,index) => {
+            return <div key={index} >{value}</div>;
           })}
           <Link onClick={clickHandler} href={`${user.name}`}>
             create new test
