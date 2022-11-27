@@ -6,7 +6,7 @@ import axios from "axios";
 import styles from "../styles/sign_up.module.css";
 import SignCard from "../components/sign_card/SignCard";
 import { useRouter } from "next/router";
-const signUp = () => {
+const SignUp = () => {
   const router = useRouter();
   const nameRef = useRef();
   const passwordRef = useRef();
@@ -57,4 +57,4 @@ const signUp = () => {
   );
 };
 
-export default signUp;
+export default SignUp;

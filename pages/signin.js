@@ -4,7 +4,7 @@ import { useDataProvider } from "../context/Data";
 import Input from "../components/input/Input";
 import Button from "../components/button/Button";
 import SignCard from "../components/sign_card/SignCard";
-const signIn = () => {
+const SignIn = () => {
   const { selectedUser, setUser, user } = useDataProvider();
   const router = useRouter();
   const nameRef = useRef();
@@ -34,4 +34,4 @@ const signIn = () => {
   );
 };
 
-export default signIn;
+export default SignIn;

@@ -1,7 +1,7 @@
 import styles from "../styles/Home.module.css";
 import Button from "../components/button/Button";
 import SignCard from "../components/sign_card/SignCard";
-const home = () => {
+const Home = () => {
   return (
     <div className={styles.container}>
       <SignCard>
@@ -11,4 +11,4 @@ const home = () => {
     </div>
   );
 };
-export default home;
+export default Home;
