@@ -24,7 +24,7 @@ const SignUp = () => {
       decibelHistory: [],
       timeLapse: timeFinish,
     };
-    const response = await axios.post("http://localhost:3000/api/user", user);
+    const response = await axios.post("https://decibel-meter.herokuapp.com/api/user", user);
 
     const checkUser = response.data;
     if (!checkUser) return alert("user already exist");
