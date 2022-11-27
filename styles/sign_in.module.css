@@ -1,0 +1,11 @@
+.sign_container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    border-radius: 10px;
+    background-color: rgb(254, 22, 1);
+    height: 500px;
+    width: 400px;
+  }
+  

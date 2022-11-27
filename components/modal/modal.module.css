@@ -1,0 +1,26 @@
+.page_container {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(71, 71, 71, 0.86);
+  display: flex;
+  align-items: center;
+
+  justify-content: center;
+}
+
+.container {
+  transition: 700ms;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  height: 200px;
+  width: 450px;
+  background-color: rgba(255, 0, 0, 0.781);
+}
+.container_inactive{
+  width: 0px;
+  transition: 700ms;
+}
