@@ -215,7 +215,7 @@ const DataProvider = ({ children }) => {
     setUser(userFromDb);
   };
   const selectedUser = (createdUser) => {
-    const response = axios.post("http://localhost:3000/api/user2", createdUser).then((res) => {
+    const response = axios.post("https://decibel-meter.herokuapp.com/api/user2", createdUser).then((res) => {
       return res.data;
     });
 
@@ -224,7 +224,7 @@ const DataProvider = ({ children }) => {
 
   const createDecibelHistory = (name, arr) => {
     const userToFetch = { name, arr };
-    const response = axios.put("http://localhost:3000/api/user2", userToFetch).then((res) => {
+    const response = axios.put("https://decibel-meter.herokuapp.com/api/user2", userToFetch).then((res) => {
       return res.data;
     });
 
@@ -253,7 +253,7 @@ const DataProvider = ({ children }) => {
   };
   const fetchTestName = async (test) => {
     const testName = { name: user.name, testName: test };
-    const response = await axios.post("http://localhost:3000/api/user3", testName);
+    const response = await axios.post("https://decibel-meter.herokuapp.com/api/user3", testName);
     setUser(response.data);
   };
   const value = {
