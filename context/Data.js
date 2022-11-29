@@ -45,7 +45,6 @@ const DataProvider = ({ children }) => {
   const herokuUrl = "https://decibel-meter.herokuapp.com/api/";
 
   useEffect(() => {
-    console.log(decibel)
     test();
   }, [decibel]);
 
@@ -217,7 +216,7 @@ const DataProvider = ({ children }) => {
     setUser(userFromDb);
   };
   const selectedUser = (createdUser) => {
-    const response = axios.post(`${localUrl}user2`, createdUser).then((res) => {
+    const response = axios.post(`${herokuUrl}user2`, createdUser).then((res) => {
       return res.data;
     });
 
@@ -226,7 +225,7 @@ const DataProvider = ({ children }) => {
 
   const createDecibelHistory = (name, arr) => {
     const userToFetch = { name, arr };
-    const response = axios.put(`${localUrl}user2`, userToFetch).then((res) => {
+    const response = axios.put(`${herokuUrl}user2`, userToFetch).then((res) => {
       return res.data;
     });
 
@@ -255,7 +254,7 @@ const DataProvider = ({ children }) => {
   };
   const fetchTestName = async (test) => {
     const testName = { name: user.name, testName: test };
-    const response = await axios.post(`${localUrl}user3`, testName);
+    const response = await axios.post(`${herokuUrl}user3`, testName);
     setUser(response.data);
   };
   const value = {

@@ -13,7 +13,7 @@ const SignUp = () => {
   const passwordRef = useRef();
   const timeLapseRef = useRef();
   const timeLapseTypeRef = useRef();
-  const {herokuUrl,localUrl} = useDataProvider()
+  const { herokuUrl, localUrl } = useDataProvider();
 
   const addUser = async (e) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ const SignUp = () => {
       decibelHistory: [],
       timeLapse: timeFinish,
     };
-    const response = await axios.post(`${localUrl}user`, user);
+    const response = await axios.post(`${herokuUrl}user`, user);
 
     const checkUser = response.data;
     if (!checkUser) return alert("user already exist");

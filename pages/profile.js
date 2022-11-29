@@ -5,15 +5,24 @@ import { useRouter } from "next/router";
 import Input from "../components/input/Input";
 import styles from "../styles/profile.module.css";
 const Profile = () => {
-  const router = useRouter()
-  const { fetchTestName, user } = useDataProvider();
+  const router = useRouter();
+  const { fetchTestName, user, setUser } = useDataProvider();
   const testRef = useRef();
 
-  const clickHandler = (e) => {
+  const clickHandler = () => {
     const testInp = testRef.current.value;
     if (!testInp) return alert("cannot be empty");
     fetchTestName(testInp);
-    router.push(`/${user.name}`)
+    router.push(`/${user.name}`);
+  };
+  const currentTest = (name) => {
+    const findTest = user.decibelHistory.find((value) => {
+      return Object.keys(value) == name[0];
+    });
+    setUser((prev) => {
+      return { ...prev, current: findTest };
+    });
+    router.push(`/${user.name}`);
   };
 
   const userTestNames = user.decibelHistory.map((value) => {
@@ -26,7 +35,11 @@ const Profile = () => {
           <h1> hello {user.name}</h1>
           <Input placeHolder="enter test name" ref={testRef} />
           {userTestNames.map((value, index) => {
-            return <div className={styles.test_tag} key={index}>{value}</div>;
+            return (
+              <div onClick={currentTest.bind(this, value)} className={styles.test_tag} key={index}>
+                {value}
+              </div>
+            );
           })}
           <div className={styles.create_test_btn} onClick={clickHandler} href={`${user.name}`}>
             create new test
