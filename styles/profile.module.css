@@ -4,3 +4,22 @@
     align-items: center;
     min-height: 60vh;
 }
+.create_test_btn{
+    margin-top: 10px;
+padding: 5px;
+font-size: 18px;
+font-weight: bold;
+background-color: white;
+border-radius: 10px;
+}
+.test_tag{
+    font-weight: bold;
+background-color: white;
+padding: 2px;
+border-radius: 10px;
+width: 100px;
+height: 40px;
+display: flex;
+justify-content: center;
+align-items: center;
+}

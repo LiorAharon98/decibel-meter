@@ -6,6 +6,7 @@ const handler = async (req, res) => {
   );
 
   const addUser = async (data) => {
+    console.log(data)
     const findUser = await user.findOne({ name: data.name, password: data.password });
     if (findUser) return res.json(null);
     const createdUser = await user.create(data);

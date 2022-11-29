@@ -6,12 +6,14 @@ import axios from "axios";
 import styles from "../styles/sign_up.module.css";
 import SignCard from "../components/sign_card/SignCard";
 import { useRouter } from "next/router";
+import { useDataProvider } from "../context/Data";
 const SignUp = () => {
   const router = useRouter();
   const nameRef = useRef();
   const passwordRef = useRef();
   const timeLapseRef = useRef();
   const timeLapseTypeRef = useRef();
+  const {herokuUrl,localUrl} = useDataProvider()
 
   const addUser = async (e) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ const SignUp = () => {
       decibelHistory: [],
       timeLapse: timeFinish,
     };
-    const response = await axios.post("https://decibel-meter.herokuapp.com/api/user", user);
+    const response = await axios.post(`${localUrl}user`, user);
 
     const checkUser = response.data;
     if (!checkUser) return alert("user already exist");

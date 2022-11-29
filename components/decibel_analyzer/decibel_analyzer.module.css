@@ -27,12 +27,13 @@
     color: black;
   }
   .container_profile {
+justify-content: space-between;
     flex-wrap: wrap;
     border-radius: 10px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 43%;
-    height: 300px;
+    height: 450px;
     background-color: rgb(255, 0, 0);
     color: black;
   }
