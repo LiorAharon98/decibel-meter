@@ -8,7 +8,7 @@ const handler = async (req, res) => {
   const testName = async (value) => {
     await user.findOneAndUpdate(
       { name: value.name },
-      { $push: { decibelHistory: { [value.testName]: { $each: { volume: 0, avg: 0, alarm: false, date: "" } } } } }
+      { $push: { decibelHistory: { [value.testName]: [{ $each: { volume: 0, avg: 0, alarm: false, date: "" } }] } } }
     );
     const response = await user.findOne({ name: value.name });
     res.json(response);

@@ -8,6 +8,7 @@ export const useDataProvider = () => {
 let volumeCallback = null;
 let volumeInterval = null;
 const DataProvider = ({ children }) => {
+  const [testNameObj, setTestNameObj] = useState("");
   const [frequencyArr, setFrequencyArr] = useState([]);
   const [isStart, setIsStart] = useState(false);
   const [error, setError] = useState("");
@@ -16,7 +17,7 @@ const DataProvider = ({ children }) => {
     password: "",
     timeLapse: "",
     currentTest: [],
-    decibelHistory: [{ test: [{ volume: 0, avg: 0, alarm: false, date: "" }] }],
+    decibelHistory: [{ [testNameObj]: [{ volume: 0, avg: 0, alarm: false, date: "" }] }],
   });
 
   const [decibel, setDecibel] = useState({
@@ -28,7 +29,6 @@ const DataProvider = ({ children }) => {
   });
 
   const [lastMin, setLastMin] = useState({
-    date: "",
     current: [], // current state spectrum
     daily: [],
     avg: 0,
@@ -45,6 +45,7 @@ const DataProvider = ({ children }) => {
   const herokuUrl = "https://decibel-meter.herokuapp.com/api/";
 
   useEffect(() => {
+    console.log(user);
     test();
   }, [decibel]);
 
@@ -56,7 +57,7 @@ const DataProvider = ({ children }) => {
     //while generating default
     let xdate = new Date().toString().substring(16, 21);
     const currentDecibelDate = user.decibelHistory.find((dbDate) => {
-      return dbDate.date == xdate;
+      return dbDate.date == "22:21";
     });
     if (decibel.decibelNumHistoryArr.length == loop) {
       decibel.decibelNumHistoryArr = [];
@@ -127,13 +128,15 @@ const DataProvider = ({ children }) => {
         let volumeSum = 0;
         for (const volume of volumes) volumeSum += volume;
         const averageVolume = volumeSum / volumes.length;
+        // analyser.getByteTimeDomainData(volumes);
         // Value range: 127 = analyser.maxDecibels - analyser.minDecibels;
         let decibelNum = (averageVolume * 100) / 127;
 
         let decibelNumNumber = decibelNum.toFixed(0);
-        setLastMin((prev) => {
-          return { ...prev, current: [...prev.current, decibelNumNumber] };
-        });
+
+        lastMin.current.push(decibelNumNumber);
+        decibel.decibelNumHistoryArr.push(decibelNumNumber);
+        decibel.dbGraph.push(decibelNumNumber);
 
         setDecibel((prev) => {
           return {
@@ -141,7 +144,6 @@ const DataProvider = ({ children }) => {
             currentDecibelNum: decibelNumNumber,
             maxDecibelNum: Math.max(decibelNumNumber, prev.maxDecibelNum),
             minDecibelNum: Math.min(decibelNumNumber, prev.minDecibelNum),
-            dbGraph: [...prev.dbGraph, decibelNumNumber],
             decibelNumHistoryArr: [...prev.decibelNumHistoryArr, decibelNumNumber],
           };
         });
@@ -181,22 +183,21 @@ const DataProvider = ({ children }) => {
           user.decibelHistory.length * 240 <= loop
         ) {
           //for first run ONLY
-          setLastMin((prev) => {
-            return {
-              ...prev,
-              date: new Date().toString().substring(16, 21),
-              avg: prev.avg,
-              max: prev.max,
-              min: prev.min,
-              alarm: prev.alarm,
-            };
+          // console.log(alarmInMin)
+          lastMin.daily.push({
+            date: new Date().toString().substring(16, 21),
+            avg: lastMin.avg,
+            max: lastMin.max,
+            min: lastMin.min,
+            alarm: lastMin.alarm,
           });
-  
+
           lastMin.alarm = false;
         }
 
         //Send to Data-Base\\ -- for first run ONLY!!!
         if (decibel.decibelNumHistoryArr.length % currentSpec == 0 && user.decibelHistory.length * 240 < loop) {
+          //every quarter of loop
           decibelHistoryBtn();
           console.log("added to Data-Base", lastMin.daily);
           lastMin.daily = []; //re-generate daily
@@ -260,7 +261,9 @@ const DataProvider = ({ children }) => {
   const value = {
     localUrl,
     herokuUrl,
+    testNameObj,
     fetchTestName,
+    setTestNameObj,
     chooseSelectedArr,
     isStart,
     frequencyArr,

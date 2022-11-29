@@ -20,7 +20,7 @@ const SignIn = () => {
     const user = await selectedUser(createdUser);
     if (!user) return alert("not found");
     setUser(user);
-    router.push(`/profile`);
+    router.push(`/${user.name}`);
   };
   return (
     <SignCard>
