@@ -7,7 +7,7 @@ const handler = async(req, res) => {
   const fetchAllUser = async () => {
   
       const users = await user.find();
-    res.send(users);
+    res.json(users);
   };
  if( req.method === "GET"){
 
