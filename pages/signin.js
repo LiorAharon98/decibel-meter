@@ -5,7 +5,7 @@ import Input from "../components/input/Input";
 import Button from "../components/button/Button";
 import SignCard from "../components/sign_card/SignCard";
 const SignIn = () => {
-  const { selectedUser, setUser, user } = useDataProvider();
+  const { selectedUser, setUser} = useDataProvider();
   const router = useRouter();
   const nameRef = useRef();
   const passwordRef = useRef();
@@ -19,6 +19,7 @@ const SignIn = () => {
     };
     const user = await selectedUser(createdUser);
     if (!user) return alert("not found");
+    sessionStorage.setItem("key", JSON.stringify(user))
     setUser(user);
     router.push(`/${user.name}`);
   };

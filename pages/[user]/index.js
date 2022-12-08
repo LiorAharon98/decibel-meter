@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import DecibelMeterDetails from "../../components/decibel_meter_details/DecibelMeterDetails";
 import styles from "../../styles/decibel_meter.module.css";
 import DecibelAnalyzer from "../../components/decibel_analyzer/DecibelAnalyzer";
@@ -7,15 +7,19 @@ import Modal from "../../components/modal/Modal";
 import Button from "../../components/button/Button";
 import FrequencyAnalyzer from "../../components/frequency analyzer/FrequencyAnalyzer";
 const DecibelMeter = () => {
-  const { setUser, isStart, start, stop, decibel, lastMin, createAudioPermissionAndRecord, user } =
+  const { createAudioPermissionAndRecord, checkAndCompareDecibelByTime, setUser, isStart, start, stop, decibel, user } =
     useDataProvider();
   useEffect(() => {
-    typeof window !== "undefined" ? createAudioPermissionAndRecord() : false;
-
-    const data = sessionStorage.getItem("key");
-
-   setUser(JSON.parse(data));
+    const data = JSON.parse(sessionStorage.getItem("key"));
+    setUser(data);
   }, []);
+
+  useEffect(() => {
+    createAudioPermissionAndRecord();
+  }, [user]);
+  useEffect(() => {
+    checkAndCompareDecibelByTime();
+  }, [decibel]);
   const clickHandler = (e) => {
     e.preventDefault();
     isStart ? stop() : start();
@@ -26,7 +30,9 @@ const DecibelMeter = () => {
       <Modal />
       <div className={styles.container}>
         <div className={styles.meter_container}>
-          {user && <h3> has decibel history ? {user.decibelHistory.length !== 0 ? "yes" : "no"}</h3>}
+          {Object.keys(user).length > 0 && (
+            <h3> has decibel history ? {user.decibelHistory.length > 0 ? "yes" : "no"}</h3>
+          )}
           <Button onClick={clickHandler}>{isStart ? "pause" : "start"}</Button>
 
           <DecibelMeterDetails type={"current"} num={decibel.currentDecibelNum} />
@@ -36,7 +42,7 @@ const DecibelMeter = () => {
           </div>
         </div>
       </div>
-      <DecibelAnalyzer arr={lastMin.current} />
+      <DecibelAnalyzer />
       <FrequencyAnalyzer />
     </>
   );

@@ -26,10 +26,9 @@ const SignUp = () => {
       decibelHistory: [],
       timeLapse: timeFinish,
     };
-    const response = await axios.post(`${herokuUrl}user`, user);
+    const response = await (await axios.post(`${localUrl}user`, user)).data;
 
-    const checkUser = response.data;
-    if (!checkUser) return alert("user already exist");
+    if (!response) return alert("user already exist");
     router.push(`/signin`);
   };
 

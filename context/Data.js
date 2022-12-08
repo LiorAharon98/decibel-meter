@@ -1,4 +1,4 @@
-import { useContext, useState, createContext, useEffect } from "react";
+import { useContext, useState, createContext } from "react";
 import axios from "axios";
 export const DataContext = createContext();
 export const useDataProvider = () => {
@@ -8,18 +8,10 @@ export const useDataProvider = () => {
 let volumeCallback = null;
 let volumeInterval = null;
 const DataProvider = ({ children }) => {
-  const [testNameObj, setTestNameObj] = useState("");
   const [frequencyArr, setFrequencyArr] = useState([]);
   const [isStart, setIsStart] = useState(false);
   const [error, setError] = useState("");
-  const [user, setUser] = useState({
-    name: "",
-    password: "",
-    timeLapse: "",
-    currentTest: [],
-    decibelHistory: [{ [testNameObj]: [{ volume: 0, avg: 0, alarm: false, date: "" }] }],
-  });
-
+  const [user, setUser] = useState({});
   const [decibel, setDecibel] = useState({
     currentDecibelNum: 0,
     minDecibelNum: 999,
@@ -38,66 +30,52 @@ const DataProvider = ({ children }) => {
   });
 
   // sec=4 min=240 hour=14400 day=345600
-  const loop = user.timeLapse || 60;
+
+  const loop = user.timeLapse;
   const currentSpec = Math.floor((10 * loop) / 100);
-  const dbDiff = 35;
   const localUrl = "http://localhost:3000/api/";
   const herokuUrl = "https://decibel-meter.herokuapp.com/api/";
 
-  useEffect(() => {
-    console.log(user);
-    test();
-  }, [decibel]);
-
-  useEffect(() => {
-    if (user.timeLapse) sessionStorage.setItem("key", JSON.stringify(user));
-  }, [user]);
-
-  const test = () => {
+  const checkAndCompareDecibelByTime = () => {
     //while generating default
-    let xdate = new Date().toString().substring(16, 21);
+    if (Object.keys(user).length == 0) return;
+
+    let currentDate = new Date().toString().substring(16, 21);
     const currentDecibelDate = user.decibelHistory.find((dbDate) => {
-      return dbDate.date == "22:21";
+      return dbDate.date == currentDate;
     });
     if (decibel.decibelNumHistoryArr.length == loop) {
       decibel.decibelNumHistoryArr = [];
     }
 
     if (user.decibelHistory.length * 240 < loop && decibel.decibelNumHistoryArr.length > 0) {
-      if (
-        decibel.currentDecibelNum > Number(lastMin.avg) + Number(dbDiff) ||
-        decibel.currentDecibelNum < Number(lastMin.avg) - Number(dbDiff)
-      ) {
+      if (decibel.currentDecibelNum > Number(lastMin.avg) || decibel.currentDecibelNum < Number(lastMin.avg)) {
         lastMin.alarm = true;
       }
     }
 
     // when default is generated
     if (user.decibelHistory.length * 240 == loop && decibel.decibelNumHistoryArr.length > 0 && currentDecibelDate) {
-      if (lastMin.avg > currentDecibelDate.avg + dbDiff || lastMin.avg < currentDecibelDate.avg - dbDiff) {
+      if (lastMin.avg > currentDecibelDate.avg || lastMin.avg < currentDecibelDate.avg) {
         setError("current state is not the same as default");
       }
       //check if any hard changes made during the current state\\
-      if (
-        decibel.currentDecibelNum > Number(lastMin.avg) + Number(dbDiff) ||
-        decibel.currentDecibelNum < Number(lastMin.avg) - Number(dbDiff)
-      ) {
+      if (decibel.currentDecibelNum > Number(lastMin.avg) || decibel.currentDecibelNum < Number(lastMin.avg)) {
         //if yes, check if an alarm is familiar
-        if (currentDecibelDate.alarm === false) {
+        if (!currentDecibelDate.alarm) {
           //if not, compare current db with avg specific time in user database
           if (
-            decibel.currentDecibelNum > currentDecibelDate.avg + dbDiff ||
+            decibel.currentDecibelNum > currentDecibelDate.avg ||
             decibel.currentDecibelNum > currentDecibelDate.max
           ) {
             setError(`${currentDecibelDate.date} High volume detected:${decibel.currentDecibelNum} `);
           }
           if (
-            decibel.currentDecibelNum < currentDecibelDate.avg - dbDiff ||
+            decibel.currentDecibelNum < currentDecibelDate.avg ||
             decibel.currentDecibelNum < currentDecibelDate.min
           ) {
             setError(`${currentDecibelDate.date} Low volume detected:${decibel.currentDecibelNum} `);
           }
-          error;
         }
       }
     }
@@ -128,11 +106,10 @@ const DataProvider = ({ children }) => {
         let volumeSum = 0;
         for (const volume of volumes) volumeSum += volume;
         const averageVolume = volumeSum / volumes.length;
-        // analyser.getByteTimeDomainData(volumes);
         // Value range: 127 = analyser.maxDecibels - analyser.minDecibels;
         let decibelNum = (averageVolume * 100) / 127;
 
-        let decibelNumNumber = decibelNum.toFixed(0);
+        let decibelNumNumber = Number(decibelNum.toFixed(0));
 
         lastMin.current.push(decibelNumNumber);
         decibel.decibelNumHistoryArr.push(decibelNumNumber);
@@ -144,7 +121,7 @@ const DataProvider = ({ children }) => {
             currentDecibelNum: decibelNumNumber,
             maxDecibelNum: Math.max(decibelNumNumber, prev.maxDecibelNum),
             minDecibelNum: Math.min(decibelNumNumber, prev.minDecibelNum),
-            decibelNumHistoryArr: [...prev.decibelNumHistoryArr, decibelNumNumber],
+            // decibelNumHistoryArr: [...prev.decibelNumHistoryArr, decibelNumNumber],
           };
         });
 
@@ -160,6 +137,7 @@ const DataProvider = ({ children }) => {
         let xSum = 0;
         let xMin = 999,
           xMax = 0;
+
         for (let j = 0; j < lastMin.current.length; j++) {
           xSum += Number(lastMin.current[j]);
           if (user.decibelHistory.length * 4 <= loop) {
@@ -168,6 +146,7 @@ const DataProvider = ({ children }) => {
             xMax = Math.max(xMax, Number(lastMin.current[j]));
           }
         }
+
         let xAvg = Number(xSum / lastMin.current.length);
         lastMin.avg = Math.floor(xAvg);
         if (user.decibelHistory.length * 4 <= loop) {
@@ -183,7 +162,6 @@ const DataProvider = ({ children }) => {
           user.decibelHistory.length * 240 <= loop
         ) {
           //for first run ONLY
-          // console.log(alarmInMin)
           lastMin.daily.push({
             date: new Date().toString().substring(16, 21),
             avg: lastMin.avg,
@@ -199,7 +177,7 @@ const DataProvider = ({ children }) => {
         if (decibel.decibelNumHistoryArr.length % currentSpec == 0 && user.decibelHistory.length * 240 < loop) {
           //every quarter of loop
           decibelHistoryBtn();
-          console.log("added to Data-Base", lastMin.daily);
+          // console.log("added to Data-Base", lastMin.daily);
           lastMin.daily = []; //re-generate daily
         }
       };
@@ -212,25 +190,21 @@ const DataProvider = ({ children }) => {
       };
     }
   };
-  const decibelHistoryBtn = async (e) => {
+  const decibelHistoryBtn = async () => {
     const userFromDb = await createDecibelHistory(user.name, lastMin.daily);
     setUser(userFromDb);
   };
-  const selectedUser = (createdUser) => {
-    const response = axios.post(`${herokuUrl}user2`, createdUser).then((res) => {
-      return res.data;
-    });
+  const selectedUser = async (createdUser) => {
+    const response = await axios.post(`${localUrl}user2`, createdUser);
 
-    return response;
+    return response.data;
   };
 
-  const createDecibelHistory = (name, arr) => {
+  const createDecibelHistory = async (name, arr) => {
     const userToFetch = { name, arr };
-    const response = axios.put(`${herokuUrl}user2`, userToFetch).then((res) => {
-      return res.data;
-    });
+    const response = await axios.put(`${localUrl}user2`, userToFetch);
 
-    return response;
+    return response.data;
   };
 
   const start = () => {
@@ -255,22 +229,32 @@ const DataProvider = ({ children }) => {
   };
   const fetchTestName = async (test) => {
     const testName = { name: user.name, testName: test };
-    const response = await axios.post(`${herokuUrl}user3`, testName);
+    const response = await axios.post(`${localUrl}user3`, testName);
     setUser(response.data);
   };
+
+  const testing = async (e) => {
+    e.preventDefault();
+    await axios.put(`${localUrl}user3`, "hello");
+  };
+
+  const allUsers = async()=>{
+   const users =  await axios.get(`${localUrl}user4`)
+   return users.data
+
+  }
   const value = {
+    allUsers,
+    checkAndCompareDecibelByTime,
+    testing,
     localUrl,
     herokuUrl,
-    testNameObj,
     fetchTestName,
-    setTestNameObj,
     chooseSelectedArr,
     isStart,
     frequencyArr,
     closeModal,
     error,
-    test,
-    loop,
     start,
     stop,
     createAudioPermissionAndRecord,

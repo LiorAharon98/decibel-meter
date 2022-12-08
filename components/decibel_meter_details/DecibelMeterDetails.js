@@ -4,7 +4,7 @@ const DecibelMeterDetails = ({ type, num }) => {
     <div>
       
       <p className={styles.decibel_num}>{type}</p>
-      <p className={styles.decibel_num}>{num ==999 ? 0 : num}</p>
+      <p className={styles.decibel_num}>{num ==999 ? 0 : num} dB</p>
     </div>
   );
 };

@@ -13,8 +13,25 @@ const handler = async (req, res) => {
     const response = await user.findOne({ name: value.name });
     res.json(response);
   };
+  const addToDecibel = async () => {
+    await user.findOneAndUpdate(
+      {
+        name: "sss",
+        id: "test1",
+        decibelHistory: {
+          $elemMatch: { config: { min: 10 } },
+        },
+      },
+      {
+        $set: { "config.$.min": 1 },
+      }
+    );
+  };
   if (req.method === "POST") {
     testName(req.body);
+  }
+  if (req.method === "PUT") {
+    addToDecibel();
   }
 };
 
