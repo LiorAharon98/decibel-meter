@@ -195,14 +195,14 @@ const DataProvider = ({ children }) => {
     setUser(userFromDb);
   };
   const selectedUser = async (createdUser) => {
-    const response = await axios.post(`${localUrl}user2`, createdUser);
+    const response = await axios.post(`${herokuUrl}user2`, createdUser);
 
     return response.data;
   };
 
   const createDecibelHistory = async (name, arr) => {
     const userToFetch = { name, arr };
-    const response = await axios.put(`${localUrl}user2`, userToFetch);
+    const response = await axios.put(`${herokuUrl}user2`, userToFetch);
 
     return response.data;
   };
@@ -229,17 +229,17 @@ const DataProvider = ({ children }) => {
   };
   const fetchTestName = async (test) => {
     const testName = { name: user.name, testName: test };
-    const response = await axios.post(`${localUrl}user3`, testName);
+    const response = await axios.post(`${herokuUrl}user3`, testName);
     setUser(response.data);
   };
 
   const testing = async (e) => {
     e.preventDefault();
-    await axios.put(`${localUrl}user3`, "hello");
+    await axios.put(`${herokuUrl}user3`, "hello");
   };
 
   const allUsers = async()=>{
-   const users =  await axios.get(`${localUrl}user4`)
+   const users =  await axios.get(`${herokuUrl}user4`)
    return users.data
 
   }
