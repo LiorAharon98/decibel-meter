@@ -1,4 +1,4 @@
-import { useContext, useState, createContext } from "react";
+import { useContext, useState, createContext,useEffect } from "react";
 import axios from "axios";
 export const DataContext = createContext();
 export const useDataProvider = () => {
@@ -30,7 +30,13 @@ const DataProvider = ({ children }) => {
   });
 
   // sec=4 min=240 hour=14400 day=345600
+  useEffect(() => {
+    const data = JSON.parse(sessionStorage.getItem("key"));
+    if(data){
 
+      setUser(data);
+    }
+  }, []);
   const loop = user.timeLapse;
   const currentSpec = Math.floor((10 * loop) / 100);
   const localUrl = "http://localhost:3000/api/";
@@ -195,7 +201,7 @@ const DataProvider = ({ children }) => {
     setUser(userFromDb);
   };
   const selectedUser = async (createdUser) => {
-    const response = await axios.post(`${herokuUrl}user2`, createdUser);
+    const response = await axios.post(`${localUrl}user2`, createdUser);
 
     return response.data;
   };
@@ -240,7 +246,7 @@ const DataProvider = ({ children }) => {
 
   const allUsers = async()=>{
    const users =  await axios.get(`${herokuUrl}user4`)
-   return users.data
+   return JSON.stringify(users.data)
 
   }
   const value = {

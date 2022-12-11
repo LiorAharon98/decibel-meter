@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react'
-import { useDataProvider } from '../context/Data'
+import React, { useEffect } from "react";
+import { useDataProvider } from "../context/Data";
 
 const Users = () => {
-    const {allUsers} = useDataProvider()
+  const { allUsers } = useDataProvider();
 
-    useEffect(()=>{
-allUsers()
-    },[])
+  const getUsers = async()=>{
+    const users = await allUsers()
 
-  return (
-<>
-</>
-  )
-}
+  }
+  useEffect(() => {
+    getUsers()
+  }, []);
 
-export default Users
+  return <></>;
+};
+
+export default Users;

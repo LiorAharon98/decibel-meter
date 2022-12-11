@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import DecibelMeterDetails from "../../components/decibel_meter_details/DecibelMeterDetails";
 import styles from "../../styles/decibel_meter.module.css";
 import DecibelAnalyzer from "../../components/decibel_analyzer/DecibelAnalyzer";
@@ -9,10 +9,7 @@ import FrequencyAnalyzer from "../../components/frequency analyzer/FrequencyAnal
 const DecibelMeter = () => {
   const { createAudioPermissionAndRecord, checkAndCompareDecibelByTime, setUser, isStart, start, stop, decibel, user } =
     useDataProvider();
-  useEffect(() => {
-    const data = JSON.parse(sessionStorage.getItem("key"));
-    setUser(data);
-  }, []);
+
 
   useEffect(() => {
     createAudioPermissionAndRecord();
