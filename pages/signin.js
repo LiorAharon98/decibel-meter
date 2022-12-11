@@ -25,6 +25,7 @@ const SignIn = () => {
   };
   return (
     <SignCard>
+      {/* <button className={style.btn} >click</button> */}
       <h1>sign in</h1>
       <Input placeHolder="enter name" ref={nameRef} />
       <Input placeHolder="enter password" ref={passwordRef} />
