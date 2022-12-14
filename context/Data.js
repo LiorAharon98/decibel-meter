@@ -1,4 +1,4 @@
-import { useContext, useState, createContext,useEffect } from "react";
+import { useContext, useState, createContext, useEffect } from "react";
 import axios from "axios";
 export const DataContext = createContext();
 export const useDataProvider = () => {
@@ -32,8 +32,7 @@ const DataProvider = ({ children }) => {
   // sec=4 min=240 hour=14400 day=345600
   useEffect(() => {
     const data = JSON.parse(sessionStorage.getItem("key"));
-    if(data){
-
+    if (data) {
       setUser(data);
     }
   }, []);
@@ -169,7 +168,7 @@ const DataProvider = ({ children }) => {
         ) {
           //for first run ONLY
           lastMin.daily.push({
-            date: new Date().toString().substring(16, 21),
+            time: new Date().toJSON().substring(0, 16),
             avg: lastMin.avg,
             max: lastMin.max,
             min: lastMin.min,
@@ -197,20 +196,8 @@ const DataProvider = ({ children }) => {
     }
   };
   const decibelHistoryBtn = async () => {
-    const userFromDb = await createDecibelHistory(user.name,user.password, lastMin.daily);
+    const userFromDb = await createDecibelHistory(user.name, user.password, lastMin.daily);
     setUser(userFromDb);
-  };
-  const selectedUser = async (createdUser) => {
-    const response = await axios.post(`${herokuUrl}user2`, createdUser);
-
-    return response.data;
-  };
-
-  const createDecibelHistory = async (name,password, arr) => {
-    const userToFetch = { name,password,arr };
-    const response = await axios.put(`${herokuUrl}user2`, userToFetch);
-
-    return response.data;
   };
 
   const start = () => {
@@ -233,6 +220,17 @@ const DataProvider = ({ children }) => {
       return value.date === e.target.innerHTML;
     });
   };
+  const createDecibelHistory = async (name, password, arr) => {
+    const userToFetch = { name, password, arr };
+    const response = await axios.put(`${herokuUrl}user2`, userToFetch);
+
+    return response.data;
+  };
+  const selectedUser = async (createdUser) => {
+    const response = await axios.post(`${herokuUrl}user2`, createdUser);
+
+    return response.data;
+  };
   const fetchTestName = async (test) => {
     const testName = { name: user.name, testName: test };
     const response = await axios.post(`${herokuUrl}user3`, testName);
@@ -244,11 +242,10 @@ const DataProvider = ({ children }) => {
     await axios.put(`${herokuUrl}user3`, "hello");
   };
 
-  const allUsers = async()=>{
-   const users =  await axios.get(`${herokuUrl}user4`)
-   return JSON.stringify(users.data)
-
-  }
+  const allUsers = async () => {
+    const users = await axios.get(`${herokuUrl}user4`);
+    return JSON.stringify(users.data);
+  };
   const value = {
     allUsers,
     checkAndCompareDecibelByTime,
