@@ -11,7 +11,7 @@ const handler = async (req, res) => {
   };
 
   const addArrDecibelHistory = async (body) => {
-    await user.findOneAndUpdate({ name: body.name }, { $push: { decibelHistory: { $each: body.arr } } });
+    await user.findOneAndUpdate({ name: body.name, password : body.password }, { $push: { decibelHistory: { $each: body.arr } } });
     const userToFetch = await user.findOne({ name: body.name });
 
     res.json(userToFetch);

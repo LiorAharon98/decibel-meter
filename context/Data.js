@@ -197,17 +197,17 @@ const DataProvider = ({ children }) => {
     }
   };
   const decibelHistoryBtn = async () => {
-    const userFromDb = await createDecibelHistory(user.name, lastMin.daily);
+    const userFromDb = await createDecibelHistory(user.name,user.password, lastMin.daily);
     setUser(userFromDb);
   };
   const selectedUser = async (createdUser) => {
-    const response = await axios.post(`${localUrl}user2`, createdUser);
+    const response = await axios.post(`${herokuUrl}user2`, createdUser);
 
     return response.data;
   };
 
-  const createDecibelHistory = async (name, arr) => {
-    const userToFetch = { name, arr };
+  const createDecibelHistory = async (name,password, arr) => {
+    const userToFetch = { name,password,arr };
     const response = await axios.put(`${herokuUrl}user2`, userToFetch);
 
     return response.data;

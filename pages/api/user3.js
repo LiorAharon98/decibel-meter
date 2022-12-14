@@ -13,6 +13,10 @@ const handler = async (req, res) => {
     const response = await user.findOne({ name: value.name });
     res.json(response);
   };
+  const fetchAllUser = async () => {
+    const users = await user.find();
+    res.json(users);
+  };
   const addToDecibel = async () => {
     await user.findOneAndUpdate(
       {
@@ -32,6 +36,10 @@ const handler = async (req, res) => {
   }
   if (req.method === "PUT") {
     addToDecibel();
+  }
+
+  if (req.method === "GET") {
+    fetchAllUser();
   }
 };
 
