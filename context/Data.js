@@ -36,25 +36,42 @@ const DataProvider = ({ children }) => {
       setUser(data);
     }
   }, []);
+
   const loop = user.timeLapse;
+
   const currentSpec = Math.floor((10 * loop) / 100);
   const localUrl = "http://localhost:3000/api/";
   const herokuUrl = "https://decibel-meter.herokuapp.com/api/";
+  const dbDiff = 35;
+
+  const getTime = () => {
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth() + 1;
+    const day = new Date().getUTCDate();
+    const hours = new Date().getHours();
+    let minuets = new Date().getMinutes().toString();
+    if (minuets.length === 1) {
+      minuets = `0${minuets}`;
+    }
+
+    return `${year}-${month}-${day}T${hours}:${minuets}`;
+  };
 
   const checkAndCompareDecibelByTime = () => {
+    const currentDate = new Date().toJSON().substring(0, 16);
     //while generating default
     if (Object.keys(user).length == 0) return;
-
-    let currentDate = new Date().toString().substring(16, 21);
     const currentDecibelDate = user.decibelHistory.find((dbDate) => {
       return dbDate.date == currentDate;
     });
     if (decibel.decibelNumHistoryArr.length == loop) {
       decibel.decibelNumHistoryArr = [];
     }
-
     if (user.decibelHistory.length * 240 < loop && decibel.decibelNumHistoryArr.length > 0) {
-      if (decibel.currentDecibelNum > Number(lastMin.avg) || decibel.currentDecibelNum < Number(lastMin.avg)) {
+      if (
+        decibel.currentDecibelNum > Number(lastMin.avg + dbDiff) ||
+        decibel.currentDecibelNum < Number(lastMin.avg - dbDiff)
+      ) {
         lastMin.alarm = true;
       }
     }
@@ -65,18 +82,21 @@ const DataProvider = ({ children }) => {
         setError("current state is not the same as default");
       }
       //check if any hard changes made during the current state\\
-      if (decibel.currentDecibelNum > Number(lastMin.avg) || decibel.currentDecibelNum < Number(lastMin.avg)) {
+      if (
+        decibel.currentDecibelNum > Number(lastMin.avg + dbDiff) ||
+        decibel.currentDecibelNum < Number(lastMin.avg - dbDiff)
+      ) {
         //if yes, check if an alarm is familiar
         if (!currentDecibelDate.alarm) {
           //if not, compare current db with avg specific time in user database
           if (
-            decibel.currentDecibelNum > currentDecibelDate.avg ||
+            decibel.currentDecibelNum > currentDecibelDate.avg + dbDiff ||
             decibel.currentDecibelNum > currentDecibelDate.max
           ) {
             setError(`${currentDecibelDate.date} High volume detected:${decibel.currentDecibelNum} `);
           }
           if (
-            decibel.currentDecibelNum < currentDecibelDate.avg ||
+            decibel.currentDecibelNum < currentDecibelDate.avg - dbDiff ||
             decibel.currentDecibelNum < currentDecibelDate.min
           ) {
             setError(`${currentDecibelDate.date} Low volume detected:${decibel.currentDecibelNum} `);
@@ -168,7 +188,7 @@ const DataProvider = ({ children }) => {
         ) {
           //for first run ONLY
           lastMin.daily.push({
-            time: new Date().toJSON().substring(0, 16),
+            time: getTime(),
             avg: lastMin.avg,
             max: lastMin.max,
             min: lastMin.min,
