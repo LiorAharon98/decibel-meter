@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import user from "../../models/userModel";
+require("dotenv").config()
 const handler = async (req, res) => {
   await mongoose.connect(process.env.MONGODB_URI);
   const selectedUser = async (body) => {
