@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import user from "../../models/userModel";
-require("dotenv").config()
+require("dotenv").config();
 const handler = async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const fetchAllUser = async () => {
