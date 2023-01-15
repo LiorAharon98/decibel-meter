@@ -9,7 +9,8 @@ const handler = async (req, res) => {
     res.json(users);
   };
   const addUser = async (data) => {
-    const findUser = await user.findOne({ username: data.name });
+    console.log(data.username)
+    const findUser = await user.findOne({ username: data.username });
     if (findUser) return res.json(null);
     const createdUser = await user.create(data);
     res.json(createdUser);

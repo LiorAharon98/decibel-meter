@@ -13,9 +13,9 @@ const SignUp = () => {
   const passwordRef = useRef();
   const timeLapseRef = useRef();
   const timeLapseTypeRef = useRef();
-  const { herokuUrl, localUrl } = useDataProvider();
+  const { addUser } = useDataProvider();
 
-  const addUser = async (e) => {
+  const clickHandler = async (e) => {
     e.preventDefault();
     const timeCheck = timeLapseTypeRef.current.value;
     const timeFinish = Number(timeLapseRef.current.value) * timeCheck;
@@ -26,18 +26,18 @@ const SignUp = () => {
       decibelHistory: [],
       timeLapse: timeFinish,
     };
-    const response = await (await axios.post(`${localUrl}user`, user)).data;
 
+    const response = await addUser(user);
     if (!response) return alert("user already exist");
     router.push(`/signin`);
   };
 
   return (
-    <SignCard page={'sign-up'}>
+    <SignCard page={"sign-up"}>
       <h1>sign up</h1>
       <Input placeHolder="enter username" ref={usernameRef} />
       <Input placeHolder="enter password" ref={passwordRef} />
-      <Input type={'number'} placeHolder="enter timelapse length" ref={timeLapseRef} />
+      <Input type={"number"} placeHolder="enter timelapse length" ref={timeLapseRef} />
       <select className={styles.select} defaultValue={"seconds"} ref={timeLapseTypeRef} name="timelapse" id="timelapse">
         <option className={styles.option} value={4}>
           seconds
@@ -53,7 +53,7 @@ const SignUp = () => {
         </option>
       </select>
 
-      <Button onClick={addUser}>sign up</Button>
+      <Button onClick={clickHandler}>sign up</Button>
     </SignCard>
   );
 };
