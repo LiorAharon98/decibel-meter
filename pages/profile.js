@@ -35,7 +35,7 @@ const Profile = () => {
               setTestName(e.target.value);
             }}
           />
-          {user.decibelHistory.length >0 && user.decibelHistory.map((value, index) => {
+          {user.decibelHistory && user.decibelHistory.map((value, index) => {
             return (
               <Button onClick={currentTest.bind(this, value.testName)} className={styles.test_tag} key={index}>
                 {value.testName}
