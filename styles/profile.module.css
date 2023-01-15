@@ -1,25 +1,27 @@
-.page_container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 60vh;
+.page_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
-.create_test_btn{
-    margin-top: 10px;
-padding: 5px;
-font-size: 18px;
-font-weight: bold;
-background-color: white;
-border-radius: 10px;
+.container {
+  justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  width: 43%;
+  height: 650px;
+  background: linear-gradient(to bottom, rgb(2, 44, 255), rgb(39, 215, 255));
+
+  color: black;
 }
-.test_tag{
-    font-weight: bold;
-background-color: white;
-padding: 2px;
-border-radius: 10px;
-width: 100px;
-height: 40px;
-display: flex;
-justify-content: center;
-align-items: center;
+.profile_tag {
+  color: white;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 99%;
+  }
 }

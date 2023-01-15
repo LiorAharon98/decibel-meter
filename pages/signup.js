@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { useDataProvider } from "../context/Data";
 const SignUp = () => {
   const router = useRouter();
-  const nameRef = useRef();
+  const usernameRef = useRef();
   const passwordRef = useRef();
   const timeLapseRef = useRef();
   const timeLapseTypeRef = useRef();
@@ -21,23 +21,23 @@ const SignUp = () => {
     const timeFinish = Number(timeLapseRef.current.value) * timeCheck;
 
     const user = {
-      name: nameRef.current.value,
+      username: usernameRef.current.value,
       password: passwordRef.current.value,
       decibelHistory: [],
       timeLapse: timeFinish,
     };
-    const response = await (await axios.post(`${herokuUrl}user`, user)).data;
+    const response = await (await axios.post(`${localUrl}user`, user)).data;
 
     if (!response) return alert("user already exist");
     router.push(`/signin`);
   };
 
   return (
-    <SignCard>
+    <SignCard page={'sign-up'}>
       <h1>sign up</h1>
-      <Input placeHolder="enter name" ref={nameRef} />
+      <Input placeHolder="enter username" ref={usernameRef} />
       <Input placeHolder="enter password" ref={passwordRef} />
-      <Input placeHolder="enter timelapse length" ref={timeLapseRef} />
+      <Input type={'number'} placeHolder="enter timelapse length" ref={timeLapseRef} />
       <select className={styles.select} defaultValue={"seconds"} ref={timeLapseTypeRef} name="timelapse" id="timelapse">
         <option className={styles.option} value={4}>
           seconds

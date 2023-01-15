@@ -1,7 +1,13 @@
 .inp{
     height: 35px;
-    width: 170px;
+    width: 190px;
     border-radius: 10px;
     border: none;
     text-align: center;
+    outline: none;
+}
+.inp:hover{
+    background-color: black;
+    transition: 500ms;
+    color: white;
 }

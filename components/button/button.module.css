@@ -2,10 +2,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 120px;
+  width: 150px;
   height: 40px;
   border-radius: 10px;
-  border: none;
-  background-color: red;
+  background-color: black;
   color: white;
+  border: none;
+}
+.button:hover {
+  background-color: white;
+  color: black;
+  transition: 500ms;
 }

@@ -10,6 +10,7 @@ let volumeInterval = null;
 const DataProvider = ({ children }) => {
   const [frequencyArr, setFrequencyArr] = useState([]);
   const [isStart, setIsStart] = useState(false);
+  const [testName, setTestName] = useState("");
   const [error, setError] = useState("");
   const [user, setUser] = useState({});
   const [decibel, setDecibel] = useState({
@@ -216,7 +217,7 @@ const DataProvider = ({ children }) => {
     }
   };
   const decibelHistoryBtn = async () => {
-    const userFromDb = await createDecibelHistory(user.name, user.password, lastMin.daily);
+    const userFromDb = await createDecibelHistory(user.username, user.password, lastMin.daily);
     setUser(userFromDb);
   };
 
@@ -240,36 +241,29 @@ const DataProvider = ({ children }) => {
       return value.date === e.target.innerHTML;
     });
   };
-  const createDecibelHistory = async (name, password, arr) => {
-    const userToFetch = { name, password, arr };
-    const response = await axios.put(`${herokuUrl}user2`, userToFetch);
+  const createDecibelHistory = async (username, password, arr) => {
+    const userToFetch = { username, password, arr, testName };
+    const response = await axios.put(`${localUrl}user2`, userToFetch);
 
     return response.data;
   };
   const selectedUser = async (createdUser) => {
-    const response = await axios.post(`${herokuUrl}user2`, createdUser);
+    const response = await axios.post(`${localUrl}user2`, createdUser);
 
     return response.data;
   };
-  const fetchTestName = async (test) => {
-    const testName = { name: user.name, testName: test };
-    const response = await axios.post(`${herokuUrl}user3`, testName);
+  const fetchTestName = async () => {
+    const nameOfTest = { username: user.username, testName };
+
+    const response = await axios.put(`${localUrl}user`, nameOfTest);
+
     setUser(response.data);
   };
 
-  const testing = async (e) => {
-    e.preventDefault();
-    await axios.put(`${herokuUrl}user3`, "hello");
-  };
-
-  const allUsers = async () => {
-    const users = await axios.get(`${herokuUrl}user4`);
-    return JSON.stringify(users.data);
-  };
   const value = {
-    allUsers,
+    testName,
     checkAndCompareDecibelByTime,
-    testing,
+    setTestName,
     localUrl,
     herokuUrl,
     fetchTestName,

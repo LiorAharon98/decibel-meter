@@ -21,7 +21,7 @@ const SignIn = () => {
     if (!user) return alert("not found");
     sessionStorage.setItem("key", JSON.stringify(user))
     setUser(user);
-    router.push(`/${user.name}`);
+    router.push(`/profile`);
   };
   return (
     <SignCard>

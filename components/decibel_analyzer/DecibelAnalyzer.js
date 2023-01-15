@@ -6,16 +6,15 @@ const DecibelAnalyzer = ({ type, children }) => {
 
   return (
     <>
-      <div className={type === "profile" ? styles.container_profile : styles.container}>
-        <div className={type === "profile" ? styles.container_profile : styles.container_history_num}>
-          {type !== "profile" &&
-            lastMin.current.map((num, index) => {
-              return (
-                <p key={index} style={{ height: `${num}%` }} className={styles.history_num}>
-                  {" "}
-                </p>
-              );
-            })}
+      <div className={styles.container}>
+        <div className={styles.container_history_num}>
+          {lastMin.current.map((num, index) => {
+            return (
+              <p key={index} style={{ height: `${num}%` }} className={styles.history_num}>
+                {" "}
+              </p>
+            );
+          })}
           {children}
 
           {lastMin.current.map((value, index) => {
