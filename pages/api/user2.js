@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
 import user from "../../models/userModel";
 const handler = async (req, res) => {
-  await mongoose.connect(
-    "mongodb+srv://liors-database:lior.ah980@cluster0.iybrzvm.mongodb.net/decibel-meter?retryWrites=true&w=majority"
-  );
+  await mongoose.connect(process.env.MONGODB_URI);
   const selectedUser = async (body) => {
     const { name, password } = body;
 
@@ -14,7 +12,6 @@ const handler = async (req, res) => {
 
   const addArrDecibelHistory = async (body) => {
     const { testName, arr, username } = body;
- 
 
     const userToFetch = await user.findOneAndUpdate(
       { [`decibelHistory.testName`]: testName, username },

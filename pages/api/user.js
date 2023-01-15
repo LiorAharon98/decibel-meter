@@ -1,15 +1,13 @@
 import mongoose from "mongoose";
 import user from "../../models/userModel";
 const handler = async (req, res) => {
-  await mongoose.connect(
-    "mongodb+srv://liors-database:lior.ah980@cluster0.iybrzvm.mongodb.net/decibel-meter?retryWrites=true&w=majority"
-  );
+  await mongoose.connect(process.env.MONGODB_URI);
   const fetchAllUser = async () => {
     const users = await user.find();
     res.json(users);
   };
   const addUser = async (data) => {
-    console.log(data.username)
+    console.log(data.username);
     const findUser = await user.findOne({ username: data.username });
     if (findUser) return res.json(null);
     const createdUser = await user.create(data);

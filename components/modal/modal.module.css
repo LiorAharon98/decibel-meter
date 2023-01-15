@@ -18,9 +18,10 @@
   border-radius: 10px;
   height: 200px;
   width: 450px;
-  background-color: rgba(255, 0, 0, 0.781);
+  background-color: rgb(0, 115, 255);
 }
-.container_inactive{
+.container_inactive {
+  display: none;
   width: 0px;
   transition: 700ms;
 }
