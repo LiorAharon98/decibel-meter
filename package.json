@@ -22,7 +22,7 @@
     "node": "18.10.0"
   },
   "cacheDirectories": [
-    "client/node_modules",
-    "server/node_modules"
+    "./node_modules",
+    "node_modules"
   ]
 }
