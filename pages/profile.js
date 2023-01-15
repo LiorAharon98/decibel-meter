@@ -6,12 +6,12 @@ import Button from "../components/button/Button";
 const Profile = () => {
   const router = useRouter();
   const { fetchTestName, user, setUser, setTestName, testName } = useDataProvider();
-   if(!user)return
+  
   const clickHandler = (e) => {
     e.preventDefault();
     if (!testName) return alert("cannot be empty");
     fetchTestName();
-    router.push(`/${user.username}`);
+    router.push(`/${user.username}`);  
   };
   const currentTest = (username) => {
     const findTest = user.decibelHistory.find((value) => {
@@ -35,7 +35,7 @@ const Profile = () => {
               setTestName(e.target.value);
             }}
           />
-          {user.decibelHistory.map((value, index) => {
+          {user && user.decibelHistory.map((value, index) => {
             return (
               <Button onClick={currentTest.bind(this, value.testName)} className={styles.test_tag} key={index}>
                 {value.testName}
