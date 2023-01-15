@@ -1,5 +1,3 @@
-import React, { useEffect, useRef } from "react";
-import DecibelAnalyzer from "../components/decibel_analyzer/DecibelAnalyzer";
 import { useDataProvider } from "../context/Data";
 import { useRouter } from "next/router";
 import Input from "../components/input/Input";
@@ -8,6 +6,7 @@ import Button from "../components/button/Button";
 const Profile = () => {
   const router = useRouter();
   const { fetchTestName, user, setUser, setTestName, testName } = useDataProvider();
+  if (user.decibelHistory.length==0)return
   const clickHandler = (e) => {
     e.preventDefault();
     if (!testName) return alert("cannot be empty");
