@@ -10,11 +10,8 @@ import FrequencyAnalyzer from "../../components/frequency analyzer/FrequencyAnal
 const DecibelMeter = () => {
   const { createAudioPermissionAndRecord, checkAndCompareDecibelByTime, isStart, start, stop, decibel, user } =
     useDataProvider();
-  if (Object.keys(user).length === 0) return;
-  const loop = user.decibelHistory[user.decibelHistory.length - 1].timeLapse;
-  const currentSpec = Math.floor((10 * loop) / 100);
   useEffect(() => {
-    createAudioPermissionAndRecord(loop,currentSpec);
+    createAudioPermissionAndRecord(loop, currentSpec);
   }, [user]);
   useEffect(() => {
     checkAndCompareDecibelByTime(loop);
@@ -23,7 +20,9 @@ const DecibelMeter = () => {
     e.preventDefault();
     isStart ? stop() : start();
   };
-
+  if (Object.keys(user).length === 0) return;
+  const loop = user.decibelHistory[user.decibelHistory.length - 1].timeLapse;
+  const currentSpec = Math.floor((10 * loop) / 100);
   return (
     <>
       <Modal />
