@@ -4,7 +4,7 @@ import Button from "../components/button/Button";
 import styles from "./../styles/create_test.module.css";
 import { useDataProvider } from "../context/Data";
 import { useRouter } from "next/router";
-const createTest = () => {
+const CreateTest = () => {
   const { fetchTestName, testName, user, setTestName } = useDataProvider();
   const router = useRouter();
   const timeLapseRef = useRef();
@@ -55,4 +55,4 @@ const createTest = () => {
   );
 };
 
-export default createTest;
+export default CreateTest;
