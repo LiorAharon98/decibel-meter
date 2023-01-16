@@ -42,7 +42,7 @@ const DataProvider = ({ children }) => {
 
   const currentSpec = Math.floor((10 * loop) / 100);
   const localUrl = "http://localhost:3000/api/";
-  const herokuUrl = "https://decibel-meter.herokuapp.com/api/";
+  const herokuUrl = "https://next-js-decibel-meter.herokuapp.com/api/";
   const dbDiff = 35;
 
   const getTime = () => {
@@ -243,24 +243,24 @@ const DataProvider = ({ children }) => {
   };
   const createDecibelHistory = async (username, password, arr) => {
     const userToFetch = { username, password, arr, testName };
-    const response = await axios.put(`${herokuUrl}user2`, userToFetch);
+    const response = await axios.put(`${localUrl}user2`, userToFetch);
 
     return response.data;
   };
   const selectedUser = async (createdUser) => {
-    const response = await axios.post(`${herokuUrl}user2`, createdUser);
+    const response = await axios.post(`${localUrl}user2`, createdUser);
 
     return response.data;
   };
   const fetchTestName = async () => {
     const nameOfTest = { username: user.username, testName };
 
-    const response = await axios.put(`${herokuUrl}user`, nameOfTest);
+    const response = await axios.put(`${localUrl}user`, nameOfTest);
 
     setUser(response.data);
   };
   const addUser = async (user) => {
-    const response = await axios.post(`${herokuUrl}user`, user);
+    const response = await axios.post(`${localUrl}user`, user);
     return response.data;
   };
 
