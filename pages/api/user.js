@@ -14,10 +14,11 @@ const handler = async (req, res) => {
     res.json(createdUser);
   };
   const createTestName = async (value) => {
+    const { testName, timeLapse } = value;
     const response = await user.findOneAndUpdate(
       { username: value.username },
 
-      { $push: { decibelHistory: { testName: value.testName, testNameArr: [] } } },
+      { $push: { decibelHistory: { testName, timeLapse, testNameArr: [] } } },
       { new: true }
     );
 

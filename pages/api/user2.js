@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import user from "../../models/userModel";
 require("dotenv").config();
 const handler = async (req, res) => {
- await mongoose.connect(process.env.MONGODB_URI);
+  await mongoose.connect(process.env.MONGODB_URI);
   const selectedUser = async (body) => {
     const { name, password } = body;
 
@@ -17,9 +17,10 @@ const handler = async (req, res) => {
     const userToFetch = await user.findOneAndUpdate(
       { [`decibelHistory.testName`]: testName, username },
 
-      { $push: { [`decibelHistory.$.testNameArr`]: { $each: arr } } }
+      { $push: { [`decibelHistory.$.testNameArr`]: { $each: arr } } },
+      { new: true }
     );
-
+   
     res.json(userToFetch);
   };
 

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useDataProvider } from "../context/Data";
 import Input from "../components/input/Input";
@@ -9,7 +9,7 @@ const SignIn = () => {
   const router = useRouter();
   const nameRef = useRef();
   const passwordRef = useRef();
-
+const [error,serError] = useState('')
   const clickHandler = async (e) => {
     e.preventDefault();
     const createdUser = {
@@ -18,7 +18,7 @@ const SignIn = () => {
       arrHistory: [],
     };
     const user = await selectedUser(createdUser);
-    if (!user) return alert("not found");
+    if (!user) return serError('user not found!')
     sessionStorage.setItem("key", JSON.stringify(user))
     setUser(user);
     router.push(`/profile`);
@@ -27,10 +27,11 @@ const SignIn = () => {
     <SignCard>
       <h1>sign in</h1>
       <Input placeHolder="enter name" ref={nameRef} />
-      <Input placeHolder="enter password" ref={passwordRef} />
+      <Input type={'password'} placeHolder="enter password" ref={passwordRef} />
       <Button style={{ backgroundColor: "black" }} onClick={clickHandler}>
         log in
       </Button>
+      {error && <h3>{error}</h3>}
     </SignCard>
   );
 };

@@ -1,17 +1,1 @@
-.select{
-    width: 120px;
-    height: 30px;
-    text-align: center;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    outline: none;
-}
 
-.sensitivity_tag{
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.384);
-    border-radius: 10px;
-    font-size: 16px;
-    color: white
-}

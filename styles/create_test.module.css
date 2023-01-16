@@ -11,24 +11,23 @@
   align-items: center;
   border-radius: 10px;
   width: 43%;
-  height: 650px;
+  height: 500px;
   background: linear-gradient(to bottom, rgb(2, 44, 255), rgb(39, 215, 255));
 
   color: black;
 }
-.test_container {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
+.select{
+  width: 200px;
+  height: 30px;
+  text-align: center;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
 }
 
-@media screen and (max-width: 768px) {
-  .container {
+@media screen and (max-width:768px) {
+  .container{
     width: 99%;
-  }
-
-  .test_container {
-    justify-content: space-between;
   }
 }

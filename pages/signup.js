@@ -11,20 +11,17 @@ const SignUp = () => {
   const router = useRouter();
   const usernameRef = useRef();
   const passwordRef = useRef();
-  const timeLapseRef = useRef();
-  const timeLapseTypeRef = useRef();
+
   const { addUser } = useDataProvider();
 
   const clickHandler = async (e) => {
     e.preventDefault();
-    const timeCheck = timeLapseTypeRef.current.value;
-    const timeFinish = Number(timeLapseRef.current.value) * timeCheck;
+
 
     const user = {
       username: usernameRef.current.value,
       password: passwordRef.current.value,
       decibelHistory: [],
-      timeLapse: timeFinish,
     };
 
     const response = await addUser(user);
@@ -36,22 +33,8 @@ const SignUp = () => {
     <SignCard page={"sign-up"}>
       <h1>sign up</h1>
       <Input placeHolder="enter username" ref={usernameRef} />
-      <Input placeHolder="enter password" ref={passwordRef} />
-      <Input type={"number"} placeHolder="enter timelapse length" ref={timeLapseRef} />
-      <select className={styles.select} defaultValue={"seconds"} ref={timeLapseTypeRef} name="timelapse" id="timelapse">
-        <option className={styles.option} value={4}>
-          seconds
-        </option>
-        <option className={styles.option} value={240}>
-          minutes
-        </option>
-        <option className={styles.option} value={14400}>
-          hours
-        </option>
-        <option className={styles.option} value={345600}>
-          days
-        </option>
-      </select>
+      <Input type={'password'} placeHolder="enter password" ref={passwordRef} />
+
 
       <Button onClick={clickHandler}>sign up</Button>
     </SignCard>
