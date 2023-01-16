@@ -246,24 +246,24 @@ const DataProvider = ({ children }) => {
   };
   const createDecibelHistory = async (username, password, arr) => {
     const userToFetch = { username, password, arr, testName };
-    const response = await axios.put(`${localUrl}user2`, userToFetch);
+    const response = await axios.put(`${herokuUrl}user2`, userToFetch);
 
     return response.data;
   };
   const selectedUser = async (createdUser) => {
-    const response = await axios.post(`${localUrl}user2`, createdUser);
+    const response = await axios.post(`${herokuUrl}user2`, createdUser);
 
     return response.data;
   };
   const fetchTestName = async (timeLapse) => {
     const createdTest = { username: user.username, testName, timeLapse };
 
-    const response = await axios.put(`${localUrl}user`, createdTest);
+    const response = await axios.put(`${herokuUrl}user`, createdTest);
 
     setUser(response.data);
   };
   const addUser = async (user) => {
-    const response = await axios.post(`${localUrl}user`, user);
+    const response = await axios.post(`${herokuUrl}user`, user);
     return response.data;
   };
 
