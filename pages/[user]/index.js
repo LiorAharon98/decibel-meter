@@ -19,7 +19,7 @@ const DecibelMeter = () => {
     testName,
   } = useDataProvider();
  
-  const currentTest = user?.decibelHistory.find((test) => test.testName === testName);
+  const currentTest = user.decibelHistory?.find((test) => test.testName === testName);
   const loop = currentTest?.timeLapse;
   const currentSpec = Math.floor((10 * loop) / 100);
   useEffect(() => {
