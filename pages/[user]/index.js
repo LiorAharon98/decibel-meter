@@ -8,10 +8,22 @@ import Button from "../../components/button/Button";
 import FrequencyAnalyzer from "../../components/frequency analyzer/FrequencyAnalyzer";
 
 const DecibelMeter = () => {
-  const { createAudioPermissionAndRecord, checkAndCompareDecibelByTime, isStart, start, stop, decibel, user } =
-    useDataProvider();
+  const {
+    createAudioPermissionAndRecord,
+    checkAndCompareDecibelByTime,
+    isStart,
+    start,
+    stop,
+    decibel,
+    user,
+    testName,
+  } = useDataProvider();
+ 
+  const currentTest = user.decibelHistory.find((test) => test.testName === testName);
+  const loop = currentTest?.timeLapse;
+  const currentSpec = Math.floor((10 * loop) / 100);
   useEffect(() => {
-    createAudioPermissionAndRecord(loop, currentSpec);
+    createAudioPermissionAndRecord(loop, currentSpec,currentTest);
   }, [user]);
   useEffect(() => {
     checkAndCompareDecibelByTime(loop);
@@ -20,9 +32,7 @@ const DecibelMeter = () => {
     e.preventDefault();
     isStart ? stop() : start();
   };
-  if (Object.keys(user).length === 0) return;
-  const loop = user.decibelHistory[user.decibelHistory.length - 1].timeLapse;
-  const currentSpec = Math.floor((10 * loop) / 100);
+
   return (
     <>
       <Modal />

@@ -13,6 +13,7 @@ const DataProvider = ({ children }) => {
   const [testName, setTestName] = useState("");
   const [error, setError] = useState("");
   const [user, setUser] = useState({});
+
   const [decibel, setDecibel] = useState({
     currentDecibelNum: 0,
     minDecibelNum: 999,
@@ -29,7 +30,6 @@ const DataProvider = ({ children }) => {
     max: 0,
     min: 999,
   });
-
   // sec=4 min=240 hour=14400 day=345600
   useEffect(() => {
     const data = JSON.parse(sessionStorage.getItem("key"));
@@ -111,7 +111,7 @@ const DataProvider = ({ children }) => {
   };
   // Initialize
 
-  const createAudioPermissionAndRecord = async (loop, currentSpec) => {
+  const createAudioPermissionAndRecord = async (loop, currentSpec, currentTest) => {
     try {
       const audioStream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -203,8 +203,11 @@ const DataProvider = ({ children }) => {
         }
 
         //Send to Data-Base\\ -- for first run ONLY!!!
-        if (decibel.decibelNumHistoryArr.length % currentSpec == 0 && user.decibelHistory.length * 240 < loop) {
-          //every quarter of loop
+        if (
+          currentTest.testNameArr.length * 240 <= loop &&
+          decibel.decibelNumHistoryArr.length <= loop &&
+          decibel.decibelNumHistoryArr.length % 240 == 0
+        ) {
           decibelHistoryBtn();
           // console.log("added to Data-Base", lastMin.daily);
           lastMin.daily = []; //re-generate daily
