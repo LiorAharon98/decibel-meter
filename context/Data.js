@@ -13,7 +13,6 @@ const DataProvider = ({ children }) => {
   const [testName, setTestName] = useState("");
   const [error, setError] = useState("");
   const [user, setUser] = useState({});
-
   const [decibel, setDecibel] = useState({
     currentDecibelNum: 0,
     minDecibelNum: 999,
@@ -23,17 +22,17 @@ const DataProvider = ({ children }) => {
   });
 
   const [lastMin, setLastMin] = useState({
-    current: [], // current state spectrum
-    daily: [],
+    current: [], // array of db of current minute
+    daily: [], // array of objects of detailed minute
+    sum: 0,
     avg: 0,
     alarm: false,
     max: 0,
     min: 999,
   });
-  // sec=4 min=240 hour=14400 day=345600
+
   useEffect(() => {
     const data = JSON.parse(sessionStorage.getItem("key"));
-
     if (data) {
       setUser(data);
     }
@@ -47,7 +46,6 @@ const DataProvider = ({ children }) => {
   const localUrl = "http://localhost:3000/api/";
   const herokuUrl = "https://next-js-decibel-meter.herokuapp.com/api/";
   const dbDiff = 35;
-
   const getTime = () => {
     const year = new Date().getFullYear();
     const month = new Date().getMonth() + 1;
@@ -57,21 +55,26 @@ const DataProvider = ({ children }) => {
     if (minuets.length === 1) {
       minuets = `0${minuets}`;
     }
-
     return `${year}-${month}-${day}T${hours}:${minuets}`;
   };
 
   const checkAndCompareDecibelByTime = (loop) => {
-    const currentDate = new Date().toJSON().substring(0, 16);
-    //while generating default
-    if (Object.keys(user).length == 0) return;
-    const currentDecibelDate = user.decibelHistory.find((dbDate) => {
-      return dbDate.date == currentDate;
+    const currentD = getTime(); // get current time
+    const tempCurrent = currentD.substring(10, 15); // get only the time without date
+    if (Object.keys(user).length == 0) return; // find it in database
+    const tempPast = user.current[0].time.substring(0, 10);
+    const currentDate = tempPast + tempCurrent;
+
+    const currentDecibelDate = user.current?.find((dbDate) => {
+      return dbDate.time == currentDate;
     });
+    //restart test at end of loop
     if (decibel.decibelNumHistoryArr.length == loop) {
       decibel.decibelNumHistoryArr = [];
     }
-    if (user.decibelHistory.length * 240 < loop && decibel.decibelNumHistoryArr.length > 0) {
+    // first run
+    if (!user.current && decibel.decibelNumHistoryArr.length > 0) {
+      //register alarms
       if (
         decibel.currentDecibelNum > Number(lastMin.avg + dbDiff) ||
         decibel.currentDecibelNum < Number(lastMin.avg - dbDiff)
@@ -80,30 +83,39 @@ const DataProvider = ({ children }) => {
       }
     }
 
-    // when default is generated
-    if (user.decibelHistory.length * 240 == loop && decibel.decibelNumHistoryArr.length > 0 && currentDecibelDate) {
-      if (lastMin.avg > currentDecibelDate.avg || lastMin.avg < currentDecibelDate.avg) {
+    // live test
+    if (user.current?.length * 240 > 0 && decibel.decibelNumHistoryArr.length > 0 && currentDecibelDate) {
+      //check current avg with default avg
+      if (lastMin.avg > currentDecibelDate.avg + dbDiff || lastMin.avg < currentDecibelDate.avg - dbDiff) {
         setError("current state is not the same as default");
       }
+
       //check if any hard changes made during the current state\\
       if (
         decibel.currentDecibelNum > Number(lastMin.avg + dbDiff) ||
         decibel.currentDecibelNum < Number(lastMin.avg - dbDiff)
       ) {
-        //if yes, check if an alarm is familiar
+        console.log("sudden db change noticed");
+        //if yes, check if alarm is familiar
         if (!currentDecibelDate.alarm) {
-          //if not, compare current db with avg specific time in user database
-          if (
-            decibel.currentDecibelNum > currentDecibelDate.avg + dbDiff ||
-            decibel.currentDecibelNum > currentDecibelDate.max
-          ) {
+          console.log("alarm is not familiar");
+          //if not, compare current db with avg specific time and Max in user database
+          if (decibel.currentDecibelNum > currentDecibelDate.avg + dbDiff) {
             setError(`${currentDecibelDate.date} High volume detected:${decibel.currentDecibelNum} `);
           }
-          if (
-            decibel.currentDecibelNum < currentDecibelDate.avg - dbDiff ||
-            decibel.currentDecibelNum < currentDecibelDate.min
-          ) {
+          //if not, compare current db with avg specific time and Min in user database
+          if (decibel.currentDecibelNum < currentDecibelDate.avg - dbDiff) {
             setError(`${currentDecibelDate.date} Low volume detected:${decibel.currentDecibelNum} `);
+          }
+        }
+        if (currentDecibelDate.alarm) {
+          console.log("alarm is familiar");
+          if (decibel.currentDecibelNum > currentDecibelDate.max + dbDiff) {
+            setError(`${currentDecibelDate.date} volume way too high:${decibel.currentDecibelNum} `);
+          }
+          //if not, compare current db with avg specific time and Min in user database
+          if (decibel.currentDecibelNum < currentDecibelDate.min - dbDiff) {
+            setError(`${currentDecibelDate.date} volume way too low:${decibel.currentDecibelNum} `);
           }
         }
       }
@@ -154,43 +166,29 @@ const DataProvider = ({ children }) => {
           };
         });
 
+        //for design
         if (decibel.dbGraph.length > 100) {
           decibel.dbGraph.shift(decibel.dbGraph[0]);
-        } //for design
+        }
 
         // GENERATE CURRENT STATE AVG \\
-        //      keep current on 1 minute
+        lastMin.sum += Number(lastMin.current[lastMin.current.length - 1]);
+        lastMin.avg = Math.floor(Number(lastMin.sum / lastMin.current.length));
+        lastMin.min = Math.min(lastMin.min, Number(lastMin.current[lastMin.current.length - 1]));
+        lastMin.max = Math.max(lastMin.max, Number(lastMin.current[lastMin.current.length - 1]));
         if (lastMin.current.length > 240) {
-          lastMin.current.shift(lastMin.current[0]);
-        }
-        let xSum = 0;
-        let xMin = 999,
-          xMax = 0;
-
-        for (let j = 0; j < lastMin.current.length; j++) {
-          xSum += Number(lastMin.current[j]);
-          if (user.decibelHistory.length * 4 <= loop) {
-            // for first run ONLY
-            xMin = Math.min(xMin, Number(lastMin.current[j]));
-            xMax = Math.max(xMax, Number(lastMin.current[j]));
-          }
-        }
-
-        let xAvg = Number(xSum / lastMin.current.length);
-        lastMin.avg = Math.floor(xAvg);
-        if (user.decibelHistory.length * 4 <= loop) {
-          // for first run ONLY
-          lastMin.min = Math.floor(xMin);
-          lastMin.max = Math.floor(xMax);
+          lastMin.min = 999;
+          lastMin.sum = 0;
+          lastMin.max = 0;
+          lastMin.current = [];
         }
 
         // GENERATING DAILY ARRAY \\
         if (
-          decibel.decibelNumHistoryArr.length % 240 == 0 && //every minute
-          decibel.decibelNumHistoryArr.length <= loop &&
-          user.decibelHistory.length * 240 <= loop
-        ) {
           //for first run ONLY
+          decibel.decibelNumHistoryArr.length % 240 == 0 && //every minute
+          !user.current
+        ) {
           lastMin.daily.push({
             time: getTime(),
             avg: lastMin.avg,
@@ -198,19 +196,22 @@ const DataProvider = ({ children }) => {
             min: lastMin.min,
             alarm: lastMin.alarm,
           });
-
           lastMin.alarm = false;
         }
 
-        //Send to Data-Base\\ -- for first run ONLY!!!
+        //Send to Data-Base\\
+        //                for first run ONLY!!!                          &&         every minute
         if (
-          currentTest.testNameArr.length * 240 <= loop &&
+          !user.current &&
           decibel.decibelNumHistoryArr.length <= loop &&
           decibel.decibelNumHistoryArr.length % 240 == 0
         ) {
           decibelHistoryBtn();
-          // console.log("added to Data-Base", lastMin.daily);
+          console.log("added to Data-Base", lastMin.daily);
           lastMin.daily = []; //re-generate daily
+          if (decibel.decibelNumHistoryArr.length == loop) {
+            return alert(`${currentTest.testName} test done registering`);
+          }
         }
       };
     } catch (e) {
@@ -242,20 +243,17 @@ const DataProvider = ({ children }) => {
   const closeModal = () => {
     setError("");
   };
-  const chooseSelectedArr = (e) => {
-    user.currentTest = user.decibelHistory.filter((value) => {
-      return value.date === e.target.innerHTML;
-    });
-  };
+
   const createDecibelHistory = async (username, password, arr) => {
     const userToFetch = { username, password, arr, testName };
     const response = await axios.put(`${herokuUrl}user2`, userToFetch);
 
     return response.data;
   };
+
   const selectedUser = async (createdUser) => {
     const response = await axios.post(`${herokuUrl}user2`, createdUser);
-
+    if (response.data) setUser(response.data);
     return response.data;
   };
   const fetchTestName = async (timeLapse) => {
@@ -275,10 +273,7 @@ const DataProvider = ({ children }) => {
     testName,
     checkAndCompareDecibelByTime,
     setTestName,
-    localUrl,
-    herokuUrl,
     fetchTestName,
-    chooseSelectedArr,
     isStart,
     frequencyArr,
     closeModal,

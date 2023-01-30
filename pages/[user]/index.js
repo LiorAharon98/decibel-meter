@@ -18,13 +18,13 @@ const DecibelMeter = () => {
     user,
     testName,
   } = useDataProvider();
- 
+
   const currentTest = user.decibelHistory?.find((test) => test.testName === testName);
   const loop = currentTest?.timeLapse;
   const currentSpec = Math.floor((10 * loop) / 100);
   useEffect(() => {
-    createAudioPermissionAndRecord(loop, currentSpec,currentTest);
-  }, [user]);
+    createAudioPermissionAndRecord(loop, currentSpec, currentTest);
+  }, []);
   useEffect(() => {
     checkAndCompareDecibelByTime(loop);
   }, [decibel]);
@@ -38,7 +38,7 @@ const DecibelMeter = () => {
       <Modal />
       <div className={styles.container}>
         <div className={styles.meter_container}>
-          {/* <h3> has decibel history ? {user.decibelHistory.length > 0 ? "yes" : "no"}</h3> */}
+          <h3> has decibel history ? {user.current?.length > 0 ? "yes" : "no"}</h3>
 
           <Button onClick={clickHandler}>{isStart ? "pause" : "start"}</Button>
 
