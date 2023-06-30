@@ -1,8 +1,10 @@
 import React from "react";
 import styles from "./decibel_analyzer.module.css";
 import { useDataProvider } from "../../context/Data";
-const DecibelAnalyzer = ({ type, children }) => {
-  const { chooseSelectedArr, lastMin } = useDataProvider();
+import { useSelector } from "react-redux";
+const DecibelAnalyzer = ({ children }) => {
+  const { lastMin } = useDataProvider();
+  const selector = useSelector((state) => state.decibel);
 
   return (
     <>
@@ -16,14 +18,6 @@ const DecibelAnalyzer = ({ type, children }) => {
             );
           })}
           {children}
-
-          {lastMin.current.map((value, index) => {
-            return (
-              <div key={index} onClick={chooseSelectedArr} className={styles.profile_tag}>
-                {value.date}
-              </div>
-            );
-          })}
         </div>
       </div>
     </>

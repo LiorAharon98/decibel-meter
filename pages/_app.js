@@ -1,10 +1,15 @@
 import "../styles/globals.css";
 import DataProvider from "../context/Data";
+import { Provider } from "react-redux";
+import store from "../store/reduxStore";
+
 function MyApp({ Component, pageProps }) {
   return (
-    <DataProvider>
-      <Component {...pageProps} />
-    </DataProvider>
+    <Provider store={store}>
+      <DataProvider>
+        <Component {...pageProps} />
+      </DataProvider>
+    </Provider>
   );
 }
 

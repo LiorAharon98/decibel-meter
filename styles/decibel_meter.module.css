@@ -7,27 +7,27 @@
 }
 .meter_container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   flex-direction: column;
   align-items: center;
-  height: 450px;
+  height: 270px;
   width: 550px;
 
   background: linear-gradient(to bottom, rgb(2, 44, 255), rgb(39, 215, 255));
   border-radius: 10px;
 }
-
-.min_max_decibel {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
+.decibel_meter_container{
+  display :flex ;
+     flex-direction :column;
+     width : 100%;
+    align-items :center
 }
 
-@media screen and (max-width:768px) {
-  .container{
+@media screen and (max-width: 768px) {
+  .container {
     min-height: 50vh;
   }
-  .meter_container{
+  .meter_container {
     height: 420px;
   }
 }

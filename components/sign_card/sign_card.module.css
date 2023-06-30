@@ -9,7 +9,7 @@
 .container {
  background: linear-gradient(to bottom,rgb(2, 44, 255),rgb(39, 215, 255));
   width: 450px;
-  height: 550px;
+  height: 500px;
   border-radius: 15px;
   display: flex;
   justify-content: space-around;
@@ -19,7 +19,7 @@
 .sign_up_container {
  background: linear-gradient(to bottom,rgb(2, 44, 255),rgb(39, 215, 255));
   width: 450px;
-  height: 750px;
+  height: 500px;
   border-radius: 15px;
   display: flex;
   justify-content: space-around;

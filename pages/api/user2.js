@@ -1,26 +1,24 @@
 import mongoose from "mongoose";
 import user from "../../models/userModel";
 require("dotenv").config();
+
 const handler = async (req, res) => {
-  await mongoose.connect(process.env.MONGODB_URI);
+ mongoose.connect(process.env.MONGODB_URI);
   const selectedUser = async (body) => {
-    const { name, password } = body;
-
-    const findUser = await user.findOne({ username: name, password: password });
-
-    res.json(findUser);
+    const { username } = body;
+    const findUser = await user.findOne({ username });
+    await res.json(findUser);
   };
 
   const addArrDecibelHistory = async (body) => {
     const { testName, arr, username } = body;
-
     const userToFetch = await user.findOneAndUpdate(
       { [`decibelHistory.testName`]: testName, username },
 
       { $push: { [`decibelHistory.$.testNameArr`]: { $each: arr } } },
       { new: true }
     );
-   
+
     res.json(userToFetch);
   };
 
@@ -31,4 +29,9 @@ const handler = async (req, res) => {
     addArrDecibelHistory(req.body);
   }
 };
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+}
 export default handler;

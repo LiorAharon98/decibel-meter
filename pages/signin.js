@@ -14,7 +14,7 @@ const SignIn = () => {
   const clickHandler = async (e) => {
     e.preventDefault();
     const createdUser = {
-      name: nameRef.current.value,
+      username: nameRef.current.value,
       password: passwordRef.current.value,
       arrHistory: [],
     };

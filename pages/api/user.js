@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import user from "../../models/userModel";
 require("dotenv").config();
 const handler = async (req, res) => {
-  await mongoose.connect(process.env.MONGODB_URI);
+  mongoose.connect(process.env.MONGODB_URI);
   const fetchAllUser = async () => {
     const users = await user.find();
     res.json(users);
@@ -36,4 +36,9 @@ const handler = async (req, res) => {
     fetchAllUser();
   }
 };
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+}
 export default handler;

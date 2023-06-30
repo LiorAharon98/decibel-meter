@@ -1,21 +1,31 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Input from "../components/input/Input";
 import Button from "../components/button/Button";
 import styles from "./../styles/create_test.module.css";
 import { useDataProvider } from "../context/Data";
 import { useRouter } from "next/router";
+import { testNameAction } from "../store/reduxStore";
+import { useDispatch, useSelector } from "react-redux";
 const CreateTest = () => {
-  const { fetchTestName, testName, user, setTestName } = useDataProvider();
+  const dispatch = useDispatch();
+  const [testNameInp, setTestNameInp] = useState("");
+  const { fetchTestName } = useDataProvider();
   const router = useRouter();
+  const userSelector = useSelector((state) => state.user);
+
   const timeLapseRef = useRef();
   const timeLapseTypeRef = useRef();
   const clickHandler = async (e) => {
     e.preventDefault();
     const timeCheck = timeLapseTypeRef.current.value;
     const timeFinish = Number(timeLapseRef.current.value) * timeCheck;
-    if (!testName) return alert("cannot be empty");
-    await fetchTestName(timeFinish);
-    router.push(`/${user.username}`);
+    if (!testNameInp) return alert("cannot be empty");
+    const currentUser = await fetchTestName(userSelector.username,timeFinish, testNameInp);
+    const findTest = currentUser.decibelHistory.find((value) => {
+      return value.testName == testNameInp;
+    });
+    dispatch(testNameAction.getTestName(findTest));
+    router.push(`/${userSelector.username}`);
   };
   return (
     <div className={styles.page_container}>
@@ -23,7 +33,7 @@ const CreateTest = () => {
         <Input
           placeHolder="enter test name"
           onChange={(e) => {
-            setTestName(e.target.value);
+            setTestNameInp(e.target.value);
           }}
         />
         <Input type={"number"} placeHolder="enter timelapse length" ref={timeLapseRef} />

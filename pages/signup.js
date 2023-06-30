@@ -25,6 +25,7 @@ const SignUp = () => {
     };
 
     const response = await addUser(user);
+    console.log(response)
     if (!response) return alert("user already exist");
     router.push(`/signin`);
   };

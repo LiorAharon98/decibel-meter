@@ -1,52 +1,24 @@
-import React, { useState, useEffect } from "react";
-import DecibelMeterDetails from "../../components/decibel_meter_details/DecibelMeterDetails";
+import DecibelMeterContainer from "../../components/decibel_meter_container/DecibelMeterContainer";
 import styles from "../../styles/decibel_meter.module.css";
 import DecibelAnalyzer from "../../components/decibel_analyzer/DecibelAnalyzer";
-import { useDataProvider } from "../../context/Data";
-import Modal from "../../components/modal/Modal";
-import Button from "../../components/button/Button";
+import StartOrPauseBtn from "../../components/start_or_pause_btn/StartOrPauseBtn";
 import FrequencyAnalyzer from "../../components/frequency analyzer/FrequencyAnalyzer";
-
+import UserDecibelInfo from "../../components/user_decibel_info/UserDecibelInfo";
+import Modal from "../../components/modal/Modal";
+import HasDecibelHistory from "../../components/has_decibel_history/HasDecibelHistory";
 const DecibelMeter = () => {
-  const {
-    createAudioPermissionAndRecord,
-    checkAndCompareDecibelByTime,
-    isStart,
-    start,
-    stop,
-    decibel,
-    user,
-    testName,
-  } = useDataProvider();
-
-  const currentTest = user.decibelHistory?.find((test) => test.testName === testName);
-  const loop = currentTest?.timeLapse;
-  const currentSpec = Math.floor((10 * loop) / 100);
-  useEffect(() => {
-    createAudioPermissionAndRecord(loop, currentSpec, currentTest);
-  }, []);
-  useEffect(() => {
-    checkAndCompareDecibelByTime(loop);
-  }, [decibel]);
-  const clickHandler = (e) => {
-    e.preventDefault();
-    isStart ? stop() : start();
-  };
-
   return (
     <>
       <Modal />
+      <UserDecibelInfo />
       <div className={styles.container}>
         <div className={styles.meter_container}>
-          <h3> has decibel history ? {user.current?.length > 0 ? "yes" : "no"}</h3>
+          <HasDecibelHistory />
+          <StartOrPauseBtn />
+           <div className={styles.decibel_meter_container}>
 
-          <Button onClick={clickHandler}>{isStart ? "pause" : "start"}</Button>
-
-          <DecibelMeterDetails type={"current"} num={decibel.currentDecibelNum} />
-          <div className={styles.min_max_decibel}>
-            <DecibelMeterDetails type={"min"} num={decibel.minDecibelNum} />
-            <DecibelMeterDetails type={"max"} num={decibel.maxDecibelNum} />
-          </div>
+          <DecibelMeterContainer />
+           </div>
         </div>
       </div>
 

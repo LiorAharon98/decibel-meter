@@ -1,32 +1,33 @@
-import { useDataProvider } from "../context/Data";
 import { useRouter } from "next/router";
 import styles from "../styles/profile.module.css";
 import Button from "../components/button/Button";
+import { useSelector, useDispatch } from "react-redux";
+import { testNameAction, userAction } from "../store/reduxStore";
+import { useDataProvider } from "../context/Data";
 const Profile = () => {
+  const { addCurrentArr } = useDataProvider();
   const router = useRouter();
-  const { user, setUser } = useDataProvider();
-
-  const currentTest = (username) => {
-    const findTest = user.decibelHistory.find((value) => {
-      return value.testName == username;
+  const dispatch = useDispatch();
+  const userSelector = useSelector((state) => state.user);
+  const currentTest = (testName) => {
+    const findTest = userSelector.decibelHistory.find((value) => {
+      return value.testName == testName;
     });
-
-    setUser((prev) => {
-      return { ...prev, current: findTest.testNameArr };
-    });
-    router.push(`/${user.username}`);
+    dispatch(testNameAction.getTestName(findTest));
+    dispatch(userAction.addCurrentArr(findTest.testNameArr));
+    addCurrentArr(userSelector, findTest);
+    router.push(`/${userSelector.username}`);
   };
-  console.log(user);
   return (
     <div className={styles.page_container}>
       <div className={styles.container}>
-        {<h1> hello {user.username}</h1>}
+        {<h1> hello {userSelector.username}</h1>}
         <div className={styles.test_container}>
-          {user.decibelHistory &&
-            user.decibelHistory.map((value, index) => {
+          {userSelector.decibelHistory &&
+            userSelector.decibelHistory.map((value, index) => {
               return (
                 <Button
-                  style={{ height: "80px", width: "120px", marginBottom: "10px" }}
+                  style={{ height: "60px", width: "100px", marginBottom: "10px" }}
                   onClick={currentTest.bind(this, value.testName)}
                   className={styles.test_tag}
                   key={index}

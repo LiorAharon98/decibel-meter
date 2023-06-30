@@ -4,9 +4,7 @@ const userSchema = new Schema({
   username: String,
   password: String,
   decibelHistory: Array,
-  timeLapse: Number,
-},
-);
+});
 
 const user = models.user || model("user", userSchema);
 export default user;
