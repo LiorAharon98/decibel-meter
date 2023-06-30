@@ -7,6 +7,7 @@ const UserDecibelInfo = () => {
   const dispatch = useDispatch();
   const { lastMin, handleLastMin, createDecibelHistory } = useDataProvider();
   const { testName } = useSelector((state) => state.testName);
+  console.log('w')
   const decibel = useSelector((state) => state.decibel);
   const userSelector = useSelector((state) => state.user);
   const loop = testName?.timeLapse;
