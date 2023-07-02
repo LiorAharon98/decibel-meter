@@ -3,10 +3,9 @@ import user from "../../models/userModel";
 require("dotenv").config();
 
 const handler = async (req, res) => {
- mongoose.connect(process.env.MONGODB_URI);
+  mongoose.connect(process.env.MONGODB_URI);
   const selectedUser = async (body) => {
     const { username } = body;
-    console.log(body)
     const findUser = await user.findOne({ username });
     await res.json(findUser);
   };
@@ -34,5 +33,5 @@ export const config = {
   api: {
     externalResolver: true,
   },
-}
+};
 export default handler;
