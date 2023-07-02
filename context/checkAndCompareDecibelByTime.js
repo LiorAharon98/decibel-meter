@@ -5,7 +5,7 @@ const checkAndCompareDecibelByTime = (loop, user, decibel, dispatch, lastMin) =>
   if (user.current.length === 0) return;
   const currentDate = getTime().substring(10, 15); // get current time
   const currentDecibelDate = user.current?.find((dbDate) => {
-    return dbDate.time.substring(10, 15) == "13:58";
+    return dbDate.time.substring(10, 15) == currentDate;
   });
   if (!currentDecibelDate) return;
   //restart test at end of loop
