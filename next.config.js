@@ -3,6 +3,9 @@
 if (process.env.NODE_ENV === "development") {
   require("dotenv").config();
 }
+if (process.env.NODE_ENV === "production") {
+  require("dotenv").config();
+}
 
 const nextConfig = {
   reactStrictMode: true,
