@@ -6,6 +6,7 @@ const handler = async (req, res) => {
  mongoose.connect(process.env.MONGODB_URI);
   const selectedUser = async (body) => {
     const { username } = body;
+    console.log(body)
     const findUser = await user.findOne({ username });
     await res.json(findUser);
   };
