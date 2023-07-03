@@ -4,7 +4,7 @@ import Button from "../components/button/Button";
 import styles from "./../styles/create_test.module.css";
 import { useDataProvider } from "../context/Data";
 import { useRouter } from "next/router";
-import { testNameAction } from "../store/reduxStore";
+import { testNameAction,userAction } from "../store/reduxStore";
 import { useDispatch, useSelector } from "react-redux";
 const CreateTest = () => {
   const dispatch = useDispatch();
@@ -21,9 +21,11 @@ const CreateTest = () => {
     const timeFinish = Number(timeLapseRef.current.value) * timeCheck;
     if (!testNameInp) return alert("cannot be empty");
     const currentUser = await fetchTestName(userSelector.username,timeFinish, testNameInp);
-    const findTest = currentUser.decibelHistory.find((value) => {
+    const findTest = currentUser.find((value) => {
       return value.testName == testNameInp;
     });
+    dispatch(userAction.addCurrentArr(findTest.testNameArr));
+    dispatch(userAction.addDecibelArr(findTest));
     dispatch(testNameAction.getTestName(findTest));
     router.push(`/${userSelector.username}`);
   };

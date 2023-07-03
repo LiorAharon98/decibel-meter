@@ -6,20 +6,20 @@ const handler = async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const selectedUser = async (body) => {
     const { username } = body;
-    const findUser = await user.findOne({ username });
+    const findUser = await user.findOne({ username }, "-password");
+    
     await res.json(findUser);
   };
 
   const addArrDecibelHistory = async (body) => {
     const { testName, arr, username } = body;
-    const userToFetch = await user.findOneAndUpdate(
+    await user.findOneAndUpdate(
       { [`decibelHistory.testName`]: testName, username },
 
       { $push: { [`decibelHistory.$.testNameArr`]: { $each: arr } } },
       { new: true }
     );
-
-    res.json(userToFetch);
+    res.json(true)
   };
 
   if (req.method === "POST") {

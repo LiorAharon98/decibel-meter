@@ -58,8 +58,7 @@ const DataProvider = ({ children }) => {
     ) {
       console.log("added to Data-Base", lastMin.daily);
       const userToFetch = { username: user.username, password: user.password, arr: lastMin.daily, testName };
-      const response = await axios.put(`${serverUrl}user2`, userToFetch);
-      dispatch(userAction.addDecibelArr(response.data));
+      await axios.put(`${serverUrl}user2`, userToFetch);
 
       lastMin.daily = []; //re-generate daily
       if (decibel.decibelNumHistoryArr.length == loop) {

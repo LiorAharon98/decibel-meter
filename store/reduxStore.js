@@ -6,7 +6,7 @@ const decibelSliceInitialState = {
   decibelNumHistoryArr: [],
   dbGraph: [],
 };
-const userSliceInitialState = { username: "", password: "", current: [], decibelHistory: [] };
+const userSliceInitialState = { username: "", current: [], decibelHistory: [] };
 
 const userSlice = createSlice({
   name: "user",
@@ -14,7 +14,6 @@ const userSlice = createSlice({
   reducers: {
     signIn(state, action) {
       state.username = action.payload.username;
-      state.password = action.payload.password;
       state.current = action.payload.current ? action.payload.current : [];
       state.decibelHistory = action.payload.decibelHistory;
     },

@@ -4,14 +4,14 @@ require("dotenv").config();
 const handler = async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const fetchAllUser = async () => {
-    const users = await user.find();
+    const users = await user.find({},'password');
     res.json(users);
   };
   const addUser = async (data) => {
     const findUser = await user.findOne({ username: data.username });
     if (findUser) return res.json(null);
-    const createdUser = await user.create(data);
-    res.json(createdUser);
+    await user.create(data);
+    res.json(true)
   };
   const createTestName = async (value) => {
     const { testName, timeLapse } = value;
@@ -22,7 +22,7 @@ const handler = async (req, res) => {
       { new: true }
     );
 
-    res.json(response);
+    res.json(response.decibelHistory);
   };
 
   if (req.method === "PUT") {

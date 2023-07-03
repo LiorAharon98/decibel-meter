@@ -3,7 +3,7 @@ const DecibelMeterDetails = ({ type, num }) => {
   return (
     <>
       <p className={styles.decibel_num}>
-        {type} <br /> { type==='min' && num ===999 ? 0 : num}
+        {type} <br /> { type==='min' && num ===999 ? 0 : num }Db
       </p>
     </>
   );
