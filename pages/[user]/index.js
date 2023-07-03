@@ -6,10 +6,7 @@ import FrequencyAnalyzer from "../../components/frequency analyzer/FrequencyAnal
 import UserDecibelInfo from "../../components/user_decibel_info/UserDecibelInfo";
 import Modal from "../../components/modal/Modal";
 import HasDecibelHistory from "../../components/has_decibel_history/HasDecibelHistory";
-import { useSelector } from "react-redux";
 const DecibelMeter = () => {
-  const user = useSelector(state=>state.user)
-  console.log(user)
   return (
     <>
       <Modal />
