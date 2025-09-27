@@ -5,6 +5,7 @@ import store from "../store/reduxStore";
 
 function MyApp({ Component, pageProps }) {
   return (
+    
     <Provider store={store}>
       <DataProvider>
         <Component {...pageProps} />
