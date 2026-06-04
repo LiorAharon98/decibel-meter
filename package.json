@@ -25,9 +25,10 @@
     "react-redux": "^8.1.1",
     "redux": "^4.2.1"
   },
-  "engines": {
-    "node": "18.14.2"
-  },
+ "engines": {
+  "node": ">=20.0.0",
+  "npm": ">=9.0.0"
+},
   "cacheDirectories": [
     "./node_modules",
     "node_modules"
