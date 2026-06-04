@@ -11,9 +11,9 @@ export const useDataProvider = () => {
 };
 
 const DataProvider = ({ children }) => {
+  
   const dispatch = useDispatch();
-  const serverUrl =
-    process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_LOCAL_URL : process.env.NEXT_PUBLIC_HEROKU_URL;
+  const serverUrl = '/api/'
   const lastMin = useMemo(() => {
     return {
       current: [], // array of db of current minute

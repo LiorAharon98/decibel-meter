@@ -3,11 +3,12 @@ import user from "../../models/userModel";
 require("dotenv").config();
 
 const handler = async (req, res) => {
-  mongoose.connect(process.env.MONGODB_URI);
+  mongoose.connect(process.env.NODE_ENV === "development" ? process.env.MONGODB_URI_LOCAL : process.env.MONGODB_URI);
+
   const selectedUser = async (body) => {
-    const { username } = body;
-    const findUser = await user.findOne({ username }, "-password");
-    
+    const { username,password } = body;
+    const findUser = await user.findOne({ username, password }, "-password");
+
     await res.json(findUser);
   };
 
@@ -17,9 +18,9 @@ const handler = async (req, res) => {
       { [`decibelHistory.testName`]: testName, username },
 
       { $push: { [`decibelHistory.$.testNameArr`]: { $each: arr } } },
-      { new: true }
+      { new: true },
     );
-    res.json(true)
+    res.json(true);
   };
 
   if (req.method === "POST") {

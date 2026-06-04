@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import user from "../../models/userModel";
 require("dotenv").config();
 const handler = async (req, res) => {
-  mongoose.connect(process.env.MONGODB_URI);
+  mongoose.connect(process.env.NODE_ENV ==='development' ? process.env.MONGODB_URI_LOCAL: process.env.MONGODB_URI);
   const fetchAllUser = async () => {
     const users = await user.find({},'password');
     res.json(users);
